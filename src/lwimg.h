@@ -46,6 +46,8 @@ typedef struct {
     uint32_t stride_pixels;
 } lwimg_img_t;
 
+uint8_t lwimg_get_bytes_per_pixel(lwimg_pixel_format_t pixel_format);
+
 lwimg_status_t lwimg_get_yuv422_to_rgb565_output_size(uint16_t src_width, uint16_t src_height, uint16_t *out_width, uint16_t *out_height);
 
 lwimg_status_t lwimg_yuv422_to_rgb565(const lwimg_img_t *src, lwimg_img_t *dst);

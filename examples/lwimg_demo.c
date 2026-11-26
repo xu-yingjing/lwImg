@@ -160,6 +160,16 @@ int main(void)
         return 1;
     }
 
+    if ((lwimg_get_bytes_per_pixel(LWIMG_PIXEL_FORMAT_RGB565) != 2U) ||
+        (lwimg_get_bytes_per_pixel(LWIMG_PIXEL_FORMAT_YUV422_UYVY) != 2U) ||
+        (lwimg_get_bytes_per_pixel(LWIMG_PIXEL_FORMAT_YUV422_YUYV) != 2U) ||
+        (lwimg_get_bytes_per_pixel(LWIMG_PIXEL_FORMAT_YUV422_VYUY) != 2U) ||
+        (lwimg_get_bytes_per_pixel(LWIMG_PIXEL_FORMAT_YUV422_YVYU) != 2U) ||
+        (lwimg_get_bytes_per_pixel((lwimg_pixel_format_t)LWIMG_PIXEL_FORMAT_COUNT) != 0U) ||
+        (lwimg_get_bytes_per_pixel((lwimg_pixel_format_t)0xFFU) != 0U)) {
+        return 1;
+    }
+
     memset(&src_buffer, 0, sizeof(src_buffer));
     memcpy(src_buffer.u8, yuyv_bytes, 4U);
     setup_yuv422(&src, src_buffer.u8, (uint32_t)sizeof(src_buffer.u8), LWIMG_PIXEL_FORMAT_YUV422_YUYV, 2U, 1U, 2U);

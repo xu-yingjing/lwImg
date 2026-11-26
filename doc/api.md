@@ -1,6 +1,6 @@
 # API contract
 
-The declarations live in `src/lwimg.h`. No function allocates, no function keeps writable static data, and no function depends on an OS, a HAL or a device header. Every function returns `LWIMG_OK` or `LWIMG_ERROR`; there is no partial success and no other status value.
+The declarations live in `src/lwimg.h`. No function allocates, no function keeps writable static data, and no function depends on an OS, a HAL or a device header. Every image operation returns `LWIMG_OK` or `LWIMG_ERROR`; there is no partial success and no other status value. The single exception is `lwimg_get_bytes_per_pixel()`, a pure query that returns a byte count instead of a status.
 
 A call that returns `LWIMG_ERROR` has written no output parameter and no destination pixel. Validation runs before the first read or write of the image buffers. Treat the contents of a rejected call as unchanged.
 
@@ -58,6 +58,14 @@ Padding bytes inside a row and bytes after the last visible pixel of the last ro
 | `LWIMG_PIXEL_FORMAT_YUV422_YVYU` | Y0 | V | Y1 | U |
 
 The second pixel of a pair reuses the first pixel's U and V samples.
+
+## lwimg_get_bytes_per_pixel
+
+```c
+uint8_t lwimg_get_bytes_per_pixel(lwimg_pixel_format_t pixel_format);
+```
+
+Returns the bytes per pixel for a pixel format: 2 for `LWIMG_PIXEL_FORMAT_RGB565` and each of the four YUV422 orders, and 0 for `LWIMG_PIXEL_FORMAT_COUNT` and any other value. The function is a pure query with no image buffer, so it cannot fail in the `LWIMG_OK` / `LWIMG_ERROR` sense; treat a zero result as an unsupported format. Every operation applies the same table internally, so a format this function reports as 0 is rejected by the descriptor checks.
 
 ## lwimg_get_yuv422_to_rgb565_output_size
 

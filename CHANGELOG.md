@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.1
+
+- Promote `lwimg_get_bytes_per_pixel()` from a static helper to a public function, so a caller can size its own buffers from a `lwimg_pixel_format_t` without duplicating the format table. It returns 2 for every supported format and 0 for `LWIMG_PIXEL_FORMAT_COUNT` or any other value, so a zero result can be used to reject a format.
+- Descriptor validation still calls the same function, so the accepted formats, the alignment rules and every operation's behaviour are unchanged.
+- Update `README.md`, `doc/api.md` and `examples/lwimg_demo.c` for the new function.
+
 ## 0.1.0
 
 Initial standalone packaging of the in-tree image conversion helpers.

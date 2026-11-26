@@ -13,6 +13,7 @@ Supported:
 - Rotation by 0, 90, 180 and 270 degrees for RGB565 images.
 - Upscaling by 2x or 2.5x for RGB565 images, with nearest-neighbour and bilinear methods.
 - Arbitrary row strides in pixels for padded rows and destinations inside a larger framebuffer.
+- A bytes-per-pixel query for any `lwimg_pixel_format_t`, returning 0 for an unsupported format.
 - Strict descriptor validation: null pointers, unknown formats, zero dimensions, short strides, undersized buffers, misalignment and odd strides or widths where the algorithm needs word access.
 
 Not supplied, by design:
@@ -91,6 +92,7 @@ The base check also requires the format to be known, both dimensions nonzero, `s
 
 | Function | Behaviour |
 | --- | --- |
+| `lwimg_get_bytes_per_pixel(pixel_format)` | Return the bytes per pixel for a format: 2 for every supported format, 0 for `LWIMG_PIXEL_FORMAT_COUNT` and any unknown value. |
 | `lwimg_get_yuv422_to_rgb565_output_size(src_width, src_height, out_width, out_height)` | Return the source dimensions unchanged; either output pointer may be NULL. Always succeeds. |
 | `lwimg_yuv422_to_rgb565(src, dst)` | Convert one YUV422 image to RGB565. Source and destination may share storage when their dimensions, stride and layout match. |
 | `lwimg_get_rotate_output_size(src_width, src_height, rotation, out_width, out_height)` | Return the rotated dimensions; 90 and 270 swap width and height. An unknown rotation fails. |
@@ -98,7 +100,7 @@ The base check also requires the format to be known, both dimensions nonzero, `s
 | `lwimg_get_scale_output_size(src_width, src_height, scale_factor, out_width, out_height)` | Return the scaled dimensions. A result above 65535 fails instead of wrapping. |
 | `lwimg_scale(src, scale_factor, scale_method, dst)` | Upscale RGB565 with nearest-neighbour or bilinear sampling. |
 
-All functions return `LWIMG_OK` or `LWIMG_ERROR`. A failed call writes no output parameter and no destination pixel.
+The image operations return `LWIMG_OK` or `LWIMG_ERROR`. `lwimg_get_bytes_per_pixel()` returns a byte count instead, and a zero result means the format is unsupported. A failed operation writes no output parameter and no destination pixel.
 
 ## Conversion details
 
@@ -167,7 +169,7 @@ cc -std=c99 -O2 -Wall -Wextra -Isrc \
 ./build/lwimg_demo
 ```
 
-The demo returns zero on success and covers all four YUV422 orders, in-place conversion, all rotations, both scale factors and methods, padded source and destination rows, the output-size overflow guard and rejected descriptors. No hardware is involved.
+The demo returns zero on success and covers all four YUV422 orders, in-place conversion, all rotations, both scale factors and methods, padded source and destination rows, the output-size overflow guard, the bytes-per-pixel query and rejected descriptors. No hardware is involved.
 
 ## Layout
 

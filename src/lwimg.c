@@ -7,21 +7,6 @@
 #define UTIL_AVG2_U16(a, b)               ((uint16_t)(((a) & (b)) + ((((a) ^ (b)) & 0xF7DEU) >> 1)))
 #define UTIL_AVG4_U16(a, b, c, d)         UTIL_AVG2_U16(UTIL_AVG2_U16((a), (b)), UTIL_AVG2_U16((c), (d)))
 
-static uint8_t lwimg_get_bytes_per_pixel(lwimg_pixel_format_t pixel_format)
-{
-    switch (pixel_format) {
-        case LWIMG_PIXEL_FORMAT_RGB565:
-        case LWIMG_PIXEL_FORMAT_YUV422_UYVY:
-        case LWIMG_PIXEL_FORMAT_YUV422_YUYV:
-        case LWIMG_PIXEL_FORMAT_YUV422_VYUY:
-        case LWIMG_PIXEL_FORMAT_YUV422_YVYU:
-            return 2U;
-
-        default:
-            return 0U;
-    }
-}
-
 static lwimg_status_t lwimg_check_img(const lwimg_img_t *img)
 {
     uint8_t bytes_per_pixel;
@@ -438,6 +423,21 @@ static void lwimg_scale_rgb565_2_5x_bilinear(const lwimg_img_t *src, lwimg_img_t
             dst_row3_u32 += 5U;
             dst_row4_u32 += 5U;
         }
+    }
+}
+
+uint8_t lwimg_get_bytes_per_pixel(lwimg_pixel_format_t pixel_format)
+{
+    switch (pixel_format) {
+        case LWIMG_PIXEL_FORMAT_RGB565:
+        case LWIMG_PIXEL_FORMAT_YUV422_UYVY:
+        case LWIMG_PIXEL_FORMAT_YUV422_YUYV:
+        case LWIMG_PIXEL_FORMAT_YUV422_VYUY:
+        case LWIMG_PIXEL_FORMAT_YUV422_YVYU:
+            return 2U;
+
+        default:
+            return 0U;
     }
 }
 
